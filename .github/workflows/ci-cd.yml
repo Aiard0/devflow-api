@@ -36,7 +36,7 @@ jobs:
       - name: Configurar chave SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/DevTest.pem
+          printf '%s\n' "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/DevTest.pem
           chmod 400 ~/.ssh/DevTest.pem
           ssh-keyscan -H 56.125.219.218 >> ~/.ssh/known_hosts
 
