@@ -1,12 +1,16 @@
+from pathlib import Path
+
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 from app.routes import example
 
 app = FastAPI(title="DevFlow API")
 
-# endpoints existentes
-@app.get("/")
+
+@app.get("/", response_class=HTMLResponse)
 def read_root():
-    return {"message": "DevFlow API is running 🚀"}
+    html = (Path(__file__).parent / "static" / "index.html").read_text()
+    return HTMLResponse(content=html)
 
 @app.get("/health")
 def health_check():
