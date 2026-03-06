@@ -1,0 +1,67 @@
+---
+- name: Docker Installation Playbook
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Atualizar lista de pacotes
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Fazer upgrade dos pacotes do sistema
+      ansible.builtin.apt:
+        upgrade: dist
+        autoremove: true
+
+    - name: Instalar dependências básicas
+      ansible.builtin.apt:
+        name:
+          - curl
+          - git
+          - ca-certificates
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: Adicionar chave GPG oficial do Docker
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Adicionar repositório Docker
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+
+    - name: Instalar Docker Engine e plugin Compose
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: true
+
+    - name: Habilitar e iniciar serviço Docker
+      ansible.builtin.systemd:
+        name: docker
+        enabled: true
+        state: started
+
+    - name: Adicionar usuário ubuntu ao grupo docker
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: true
+
+    - name: Verificar versão do Docker instalada
+      ansible.builtin.command: docker --version
+      register: docker_version
+      changed_when: false
+
+    - name: Exibir versão do Docker
+      ansible.builtin.debug:
+        msg: "{{ docker_version.stdout }}"

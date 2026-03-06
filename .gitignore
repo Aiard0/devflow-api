@@ -13,6 +13,11 @@ env/
 .env.*
 !.env.example
 
+# SSH keys
+*.pem
+*.key
+*.p12
+
 # Tool caches
 .pytest_cache/
 .mypy_cache/

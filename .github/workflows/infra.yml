@@ -1,0 +1,31 @@
+name: Infra — Provisionar EC2
+
+on:
+  workflow_dispatch:
+
+jobs:
+  provision:
+    name: Provision via Ansible
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Instalar Ansible
+        run: pip install ansible
+
+      - name: Configurar chave SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/DevTest.pem
+          chmod 400 ~/.ssh/DevTest.pem
+
+      - name: Adicionar EC2 ao known_hosts
+        run: ssh-keyscan -H 56.125.219.218 >> ~/.ssh/known_hosts
+
+      - name: Rodar playbook de provisionamento
+        run: |
+          ansible-playbook \
+            -i ansible/inventories/hosts.ini \
+            ansible/playbooks/docker.yml

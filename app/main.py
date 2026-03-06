@@ -1,5 +1,5 @@
-  from fastapi import FastAPI
-from app.routes import example  # novas rotas que você vai criar
+from fastapi import FastAPI
+from routes import example  # novas rotas que você vai criar
 
 app = FastAPI(title="DevFlow API")
 
