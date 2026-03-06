@@ -36,9 +36,11 @@ jobs:
       - name: Configurar chave SSH
         run: |
           mkdir -p ~/.ssh
-          printf '%s\n' "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/DevTest.pem
+          echo "${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}" > ~/.ssh/DevTest.pem
           chmod 400 ~/.ssh/DevTest.pem
-          ssh-keyscan -H 56.125.219.218 >> ~/.ssh/known_hosts
+
+      - name: Adicionar EC2 ao known_hosts
+        run: ssh-keyscan -H 56.125.219.218 >> ~/.ssh/known_hosts
 
       - name: Deploy na EC2
         run: |
