@@ -36,13 +36,13 @@ jobs:
       - name: Configurar chave SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/devtest.pem
-          chmod 400 ~/.ssh/devtest.pem
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/DevTest.pem
+          chmod 400 ~/.ssh/DevTest.pem
           ssh-keyscan -H 56.125.219.218 >> ~/.ssh/known_hosts
 
       - name: Deploy na EC2
         run: |
-          ssh -i ~/.ssh/devtest.pem ubuntu@56.125.219.218 "
+          ssh -i ~/.ssh/DevTest.pem ubuntu@56.125.219.218 "
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/devflow-api:latest &&
             docker rm -f devflow || true &&
             docker run -d \
