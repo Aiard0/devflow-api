@@ -9,3 +9,7 @@ def ping():
 @router.get("/test")
 def test():
     return {"test": "success!"}
+
+@router.get("/devops")
+def test():
+    return {"devops": "ola mundo!"}
